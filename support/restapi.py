@@ -8,7 +8,7 @@ __myLongitude       = ""
 __myAltitudeMeters  = ""
 __myThresholdAngle  = ""
 __myPredictionDays  = ""
-__mySatellites      = ""
+__mySatellites      = list()
 __apiKeyFlag        = ""
 __baseUrl           = ""
 
@@ -42,21 +42,21 @@ def readConfig():
     ################################
     # Get the configuration
     # Create a config parser object
-    __config = configparser.ConfigParser()
+    config = configparser.ConfigParser()
     
-    # Read the configuration file
-    __config.read('myconfig.ini')
+    # Read the configuration file (this just needs to be relative to the top executable)
+    config.read('config.ini')
     
     # Access values from the configuration file
-    __myKey             = __config.get('data', 'myKey')
-    __myLatitude        = __config.get('data', 'myLatitude')
-    __myLongitude       = __config.get('data', 'myLongitude')
-    __myAltitudeMeters  = __config.get('data', 'myAltitudeMeters')
-    __myThresholdAngle  = __config.get('data', 'myThresholdAngle')
-    __myPredictionDays  = __config.get('data', 'myPredictionDays')
+    __myKey             = config.get('restapi', 'myKey')
+    __myLatitude        = config.get('restapi', 'myLatitude')
+    __myLongitude       = config.get('restapi', 'myLongitude')
+    __myAltitudeMeters  = config.get('restapi', 'myAltitudeMeters')
+    __myThresholdAngle  = config.get('restapi', 'myThresholdAngle')
+    __myPredictionDays  = config.get('restapi', 'myPredictionDays')
     # NORAD IDs can be looked up here:
     #       https://www.n2yo.com/database/
-    __mySatellites      = __config.get('data', 'mySatellites')
+    __mySatellites      = config.get('satellites', 'mySatellites').split()
     
     ################################
     # Information about the N2YO API Requests:
@@ -75,6 +75,8 @@ def buildUrl(thisNoradId):
     global __myThresholdAngle
     global __apiKeyFlag
 
+    readConfig()
+
     __thisUrl = "%s/radiopasses/%s/%s/%s/%s/%s/%s/%s"%(
         str(__baseUrl),
         str(thisNoradId),
@@ -90,4 +92,4 @@ def buildUrl(thisNoradId):
     return __thisUrl
 
 def buildAllUrls():
-
+    pass
