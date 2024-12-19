@@ -1,13 +1,13 @@
 import configparser
-from support import debug
+from support import Debug
 
 class RestApiClass:
     ################################
     # Initialize from the config.ini file
     def __init__(self, thisDebugLevel=0):
         ################################
-        # Initialize the debug instance
-        self.__myDebug = debug.DebugClass(thisDebugLevel)
+        # Initialize the Debug instance
+        self.__myDebug = Debug.DebugClass(thisDebugLevel)
 
         self.__myDebug.debugPrint("__init__()", 1)
 
