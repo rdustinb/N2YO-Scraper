@@ -1,10 +1,25 @@
-# Add your specific N2YO API Key here by visiting this page:
-#       https://www.n2yo.com/login/edit
-myKey = 'xxxxxx-xxxxxx-xxxxxx-xxxx'
-# Your location's latitude
-myLatitude = 38.993
-# Your location's longitude
-myLongitude = -77.031
-# Your locations altitude
-myAltitudeMeters = 10
+################################################################################
+#
+# TODO fill out these fields per your location and rename this file to 'config.ini'
+#
+################################################################################
 
+[restapi]
+# Add your specific N2YO API Key here by visiting this page:
+#       https://www.n2yo.com/login/edit
+myKey = xxxxxx-xxxxxx-xxxxxx-xxxx
+# Your location's latitude
+myLatitude = 00.000
+# Your location's longitude
+myLongitude = 00.000
+# Your location's altitude
+myAltitudeMeters = 0
+# Desired minimum peak angle
+myThresholdAngle = 45
+# Desired Prediction Days out to fetch (max of 10)
+myPredictionDays = 10
+
+[satellites]
+# List all satellites desired to be tracked
+myNoradIds = 25338 28654 33591 43013
+mySatelliteNames = NOAA15 NOAA18 NOAA19 NOAA20
