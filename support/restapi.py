@@ -1,23 +1,16 @@
 import configparser
+from support import debug
 
 class RestApiClass:
     ################################
-    # Global Variables
-    __myKey             = ""
-    __myLatitude        = ""
-    __myLongitude       = ""
-    __myAltitudeMeters  = ""
-    __myThresholdAngle  = ""
-    __myPredictionDays  = ""
-    __myNoradIds        = list()
-    __apiKeyFlag        = ""
-    __baseUrl           = ""
-    __myUrls            = dict()
-    
-    ################################
     # Initialize from the config.ini file
-    def __init__(self):
-        print("__init__()")
+    def __init__(self, thisDebugLevel=0):
+        ################################
+        # Initialize the debug instance
+        self.__myDebug = debug.DebugClass(thisDebugLevel)
+
+        self.__myDebug.debugPrint("__init__()", 1)
+
         ################################
         # Get the configuration
         # Create a config parser object
@@ -45,14 +38,15 @@ class RestApiClass:
 
         ################################
         # Loop through all the NORAD IDs Defined by the user
+        self.__myUrls            = dict()
         for thisNoradId in self.__myNoradIds:
-            print(thisNoradId)
+            self.__myDebug.debugPrint(thisNoradId, 1)
             self.buildUrl(thisNoradId)
     
     ################################
     # Top Functions
     def buildUrl(self,thisNoradId):
-        print("buildUrl()")
+        self.__myDebug.debugPrint("buildUrl()", 1)
     
         self.__myUrls[thisNoradId] = "%s/radiopasses/%s/%s/%s/%s/%s/%s/%s"%(
             str(self.__baseUrl),
@@ -65,4 +59,4 @@ class RestApiClass:
             str(self.__apiKeyFlag)
         )
 
-        print(self.__myUrls[thisNoradId])
+        self.__myDebug.debugPrint(self.__myUrls[thisNoradId], 1)
