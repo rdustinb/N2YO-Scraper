@@ -10,10 +10,8 @@ __DEBUG_VVV = 3
 
 debug.setDebugLevel(__DEBUG_V)
 
-# Generate the REST API URL
-thisRestUrl = restapi.buildUrl(25338)
-debug.debugPrint("The Radio Passes URL is set as:", __DEBUG_V)
-debug.debugPrint("%s"%thisRestUrl, __DEBUG_V)
+# Initialize the restapi instance
+thisRestApi = restapi.RestApiClass()
 
 ## Create the request and capture the JSON response
 #response = requests.get(thisRestUrl)
