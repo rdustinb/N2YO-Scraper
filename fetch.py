@@ -1,9 +1,9 @@
-from support import restapi, dataHandling, debug
+from support import RestAPI, dataHandling, Debug
 import requests
 import json
 
 # Initialize the restapi instance
-thisRestApi = restapi.RestApiClass(thisDebugLevel=0)
+thisRestApi = RestAPI.RestApiClass(thisDebugLevel=1)
 
 ## Create the request and capture the JSON response
 #response = requests.get(thisRestUrl)

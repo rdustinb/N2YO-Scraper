@@ -61,3 +61,8 @@ class RestApiClass:
         )
 
         self.__myDebug.debugPrint(self.__myUrls[thisNoradId], 1)
+
+    # Fetch the JSON Data
+    def fetchJson(self,thisUrl):
+        self.__myDebug.debugPrint("fetchJson()", 1)
+    
