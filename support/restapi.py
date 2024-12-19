@@ -20,15 +20,16 @@ class RestApiClass:
         config.read('config.ini')
         
         # Access values from the configuration file
-        self.__myKey             = config.get('restapi', 'myKey')
-        self.__myLatitude        = config.get('restapi', 'myLatitude')
-        self.__myLongitude       = config.get('restapi', 'myLongitude')
-        self.__myAltitudeMeters  = config.get('restapi', 'myAltitudeMeters')
-        self.__myThresholdAngle  = config.get('restapi', 'myThresholdAngle')
-        self.__myPredictionDays  = config.get('restapi', 'myPredictionDays')
+        self.__myKey                = config.get('restapi', 'myKey')
+        self.__myLatitude           = config.get('restapi', 'myLatitude')
+        self.__myLongitude          = config.get('restapi', 'myLongitude')
+        self.__myAltitudeMeters     = config.get('restapi', 'myAltitudeMeters')
+        self.__myThresholdAngle     = config.get('restapi', 'myThresholdAngle')
+        self.__myPredictionDays     = config.get('restapi', 'myPredictionDays')
         # NORAD IDs can be looked up here:
         #       https://www.n2yo.com/database/
-        self.__myNoradIds        = config.get('satellites', 'myNoradIds').split()
+        self.__mySatelliteNoradIds  = config.get('satellites', 'mySatelliteNoradIds').split()
+        self.__mySatelliteNames     = config.get('satellites', 'mySatelliteNames').split()
         
         ################################
         # Information about the N2YO API Requests:
@@ -39,7 +40,7 @@ class RestApiClass:
         ################################
         # Loop through all the NORAD IDs Defined by the user
         self.__myUrls            = dict()
-        for thisNoradId in self.__myNoradIds:
+        for thisNoradId in self.__mySatelliteNoradIds:
             self.__myDebug.debugPrint(thisNoradId, 1)
             self.buildUrl(thisNoradId)
     

@@ -21,5 +21,5 @@ myPredictionDays = 10
 
 [satellites]
 # List all satellites desired to be tracked
-myNoradIds = 25338 28654 33591 43013
+mySatelliteNoradIds = 25338 28654 33591 43013
 mySatelliteNames = NOAA15 NOAA18 NOAA19 NOAA20
