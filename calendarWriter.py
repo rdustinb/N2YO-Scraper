@@ -75,6 +75,9 @@
 #   END:VEVENT
 # END:VCALENDAR
 
+################################################################################
+#                                   Support
+################################################################################
 import uuid
 
 def genRandomId():
@@ -84,28 +87,9 @@ def genRandomId():
     # The function uuid1, uuid3, uuid4, and uuid5 provide the different versions of UUIDs
     return str(uuid.uuid4())
 
-def generateAlert(minutesBefore: int):
-    newDataList = list()
-
-    # Of the form xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    thisAlarmUID = genRandomId()
-
-    # Append the alarm information
-    newDataList.append("BEGIN:VALARM")
-    newDataList.append("ACTION:DISPLAY")
-    newDataList.append("DESCRIPTION:Reminder")
-    newDataList.append("TRIGGER:-PT%iM"%(minutesBefore))
-    newDataList.append("UID:%s"%(thisAlarmUID))
-    newDataList.append("X-WR-ALARMUID:%s"%(thisAlarmUID))
-    newDataList.append("END:VALARM")
-    newDataList.append("BEGIN:VALARM")
-    newDataList.append("ACTION:NONE")
-    newDataList.append("TRIGGER;VALUE=DATE-TIME:19760401T005545Z")
-    newDataList.append("END:VALARM")
-
-    # Return the new list
-    return newDataList
-
+################################################################################
+#                                  Time Stuff
+################################################################################
 import datetime, dateutil
 
 def utcEpochToLocalTime(thisEpoch: int, myTimezone: str):
@@ -120,6 +104,32 @@ def utcEpochToLocalTime(thisEpoch: int, myTimezone: str):
 
 def getCurrentLocalTime():
     return datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
+
+################################################################################
+#                             Calendar Event Building
+################################################################################
+def generateAlert(minutesBefore: int):
+    newDataList = list()
+
+    # Of the form xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    thisAlarmUID = genRandomId()
+
+    # Append the alarm information
+    newDataList.append("BEGIN:VALARM")
+    newDataList.append("ACTION:DISPLAY")
+    newDataList.append("DESCRIPTION:Reminder")
+    newDataList.append("TRIGGER:-PT%iM"%(minutesBefore))
+    newDataList.append("UID:%s"%(thisAlarmUID))
+    newDataList.append("X-WR-ALARMUID:%s"%(thisAlarmUID))
+    newDataList.append("END:VALARM")
+    # newDataList.append("BEGIN:VALARM")
+    # newDataList.append("ACTION:NONE")
+    # This is the founding date of Apple Computer....probably not needed...
+    # newDataList.append("TRIGGER;VALUE=DATE-TIME:19760401T005545Z")
+    # newDataList.append("END:VALARM")
+
+    # Return the new list
+    return newDataList
 
 def generateEvent(eventSummary: str, startTime: str, endTime: str, myTimezone: str, 
                   eventLocation: str, eventDescription: str, eventUrl: str, eventUid: str):
