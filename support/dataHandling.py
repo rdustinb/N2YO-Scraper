@@ -19,6 +19,9 @@ def setLocalData(localDataFolder: str, localDataFilename: str, jsonData):
 
     print("Setting data to %s"%(localDataFilePath))
 
+    # Create the folder if it doesn't exist
+    Path(localDataFolder).mkdir(parents=True, exist_ok=True)
+
     # Store the data local
     with open(localDataFilePath, "w") as fh:
         json.dump(jsonData, fh)
