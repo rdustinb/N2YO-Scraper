@@ -40,7 +40,13 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
     # Loop through all Events for this satellite
     for thisEvent in thisSatelliteJson['passes']:
         # Generate this event's UID
-        thisEventUid = utils.genRandomId()
+        thisEventUid = "%s-%s-%s-%s"%(
+            thisSatelliteJson['info']['satid'],
+            thisEvent['startUTC'],
+            thisEvent['maxUTC'],
+            thisEvent['endUTC']
+        )
+
         # Setup the Summary and Description strings:
         eventSummary = "%s, Elevation: %.2f"%(
             thisSatelliteJson['info']['satname'],
@@ -61,7 +67,7 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
           eventLocation='Outer Space',
           eventDescription=eventDescription,
           eventUrl=thisUrl,
-          eventUid=thisEventUid,
+          eventUid=utils.genRandomId(), #thisEventUid,
           alarmMinutesBefore=myAlertTime
         )
         # Write the Calendar Event to a file
