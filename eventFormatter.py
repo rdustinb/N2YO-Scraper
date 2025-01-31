@@ -250,7 +250,7 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 
 # Example string setup and call based on an N2YO JSON file:
 #
-# import calendarWriter
+# import eventFormatter
 #
 # # Test Data
 # satname = "NOAA 15"
@@ -266,7 +266,7 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 # endUTC = 1734661175
 #
 # # Generate a random UID for this event:
-# thisEvenUid = calendarWriter.genRandomId()
+# thisEvenUid = eventFormatter.genRandomId()
 #
 # # Setup the Summary and Description strings:
 # eventSummary = "%s, Elevation: %.2f"%(satname, maxEl)
@@ -275,7 +275,7 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 # # Setup the URL, just point to the N2YO page for now...
 # thisUrl = "www.n2yo.com"
 #
-# newEvent = calendarWriter.generateCalDavEvent(
+# newEvent = eventFormatter.generateCalDavEvent(
 #   eventSummary=eventSummary,
 #   startTime=startUTC,
 #   endTime=endUTC,
@@ -289,3 +289,5 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 #
 # for thisLine in newEvent:
 #   print(thisLine)
+#
+# print("Event filename: %s.ics"%(thisEvenUid))
