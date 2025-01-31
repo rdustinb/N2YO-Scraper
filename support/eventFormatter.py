@@ -82,14 +82,7 @@
 ################################################################################
 #                                   Support
 ################################################################################
-import uuid
-
-def genRandomId():
-    # See RFC4122 for more information as this package generates random UUIDs based on that specification:
-    # https://www.rfc-editor.org/rfc/rfc4122
-    #
-    # The function uuid1, uuid3, uuid4, and uuid5 provide the different versions of UUIDs
-    return str(uuid.uuid4())
+from support import utils
 
 ################################################################################
 #                                  Time Stuff
@@ -127,7 +120,7 @@ def generateVALARM(minutesBefore: int):
     newAlarmList = list()
 
     # Of the form xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    thisAlarmUID = genRandomId()
+    thisAlarmUID = utils.genRandomId()
 
     # Append the alarm information
     newAlarmList.append("    BEGIN:VALARM")
@@ -251,6 +244,7 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 # Example string setup and call based on an N2YO JSON file:
 #
 # import eventFormatter
+# from support import utils
 #
 # # Test Data
 # satname = "NOAA 15"
@@ -266,7 +260,7 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 # endUTC = 1734661175
 #
 # # Generate a random UID for this event:
-# thisEvenUid = eventFormatter.genRandomId()
+# thisEvenUid = utils.genRandomId()
 #
 # # Setup the Summary and Description strings:
 # eventSummary = "%s, Elevation: %.2f"%(satname, maxEl)
