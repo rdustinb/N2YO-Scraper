@@ -4,6 +4,14 @@
 #
 ################################################################################
 
+[caldav]
+# Your timezone location. Ex: America/NewYork
+myLocation = 'America/Denver'
+# Minutes before the event to set the alerts to
+myAlertTime = 15
+# Where to output the .ics files for each of the satellite events
+outFolder = some_folder
+
 [restapi]
 # Add your specific N2YO API Key here by visiting this page:
 #       https://www.n2yo.com/login/edit
