@@ -123,13 +123,13 @@ def generateVALARM(minutesBefore: int):
     thisAlarmUID = utils.genRandomId()
 
     # Append the alarm information
-    newAlarmList.append("    BEGIN:VALARM")
-    newAlarmList.append("      ACTION:DISPLAY")
-    newAlarmList.append("      DESCRIPTION:Reminder")
-    newAlarmList.append("      TRIGGER:-PT%iM"%(minutesBefore))
-    newAlarmList.append("      UID:%s"%(thisAlarmUID))
-    newAlarmList.append("      X-WR-ALARMUID:%s"%(thisAlarmUID))
-    newAlarmList.append("    END:VALARM")
+    newAlarmList.append("BEGIN:VALARM")
+    newAlarmList.append("ACTION:DISPLAY")
+    newAlarmList.append("DESCRIPTION:Reminder")
+    newAlarmList.append("TRIGGER:-PT%iM"%(minutesBefore))
+    newAlarmList.append("UID:%s"%(thisAlarmUID))
+    newAlarmList.append("X-WR-ALARMUID:%s"%(thisAlarmUID))
+    newAlarmList.append("END:VALARM")
 
     # Return the new list
     return newAlarmList
@@ -147,19 +147,19 @@ def generateVEVENT(eventSummary: str, startTime: str, endTime: str, myLocationSt
     thisCurrentTime = getCurrentLocalTime()
 
     # Create a list of the event information
-    newEventList.append("  BEGIN:VEVENT")
-    newEventList.append("    SUMMARY:%s"%(eventSummary))
-    newEventList.append("    DTSTART;TZID=%s:%s"%(myLocationString,localStartTime))
-    newEventList.append("    DTEND;TZID=%s:%s"%(myLocationString,localEndTime))
-    newEventList.append("    LOCATION:Location: %s"%(eventLocation))
-    newEventList.append("    DESCRIPTION:%s"%(eventDescription))
-    newEventList.append("    URL;VALUE=URI:%s"%(eventUrl))
-    newEventList.append("    UID:%s"%(eventUid))
-    newEventList.append("    TRANSP:OPAQUE")
-    newEventList.append("    SEQUENCE:0")
-    newEventList.append("    CREATED:%s"%(thisCurrentTime))
-    newEventList.append("    LAST-MODIFIED:%s"%(thisCurrentTime))
-    newEventList.append("    DTSTAMP:%s"%(thisCurrentTime))
+    newEventList.append("BEGIN:VEVENT")
+    newEventList.append("SUMMARY:%s"%(eventSummary))
+    newEventList.append("DTSTART;TZID=%s:%s"%(myLocationString,localStartTime))
+    newEventList.append("DTEND;TZID=%s:%s"%(myLocationString,localEndTime))
+    newEventList.append("LOCATION:Location: %s"%(eventLocation))
+    newEventList.append("DESCRIPTION:%s"%(eventDescription))
+    newEventList.append("URL;VALUE=URI:%s"%(eventUrl))
+    newEventList.append("UID:%s"%(eventUid))
+    newEventList.append("TRANSP:OPAQUE")
+    newEventList.append("SEQUENCE:0")
+    newEventList.append("CREATED:%s"%(thisCurrentTime))
+    newEventList.append("LAST-MODIFIED:%s"%(thisCurrentTime))
+    newEventList.append("DTSTAMP:%s"%(thisCurrentTime))
 
     # Generate and append an alert/reminder to the event
     alarmList = generateVALARM(minutesBefore=alarmMinutesBefore)
@@ -168,7 +168,7 @@ def generateVEVENT(eventSummary: str, startTime: str, endTime: str, myLocationSt
     newEventList.extend(alarmList)
 
     # Close the event
-    newEventList.append("  END:VEVENT")
+    newEventList.append("END:VEVENT")
 
     # Return the new list
     return newEventList
@@ -181,23 +181,23 @@ def generateVTIMEZONE(myLocationString: str):
     endOffset, endName = getTimezoneInfo(thisTime="20070311T020000", myLocationString=myLocationString)
 
     # This is static until Daylight savings changes in the US
-    newTimezoneList.append("  BEGIN:VTIMEZONE")
-    newTimezoneList.append("    TZID:%s"%(myLocationString))
-    newTimezoneList.append("    BEGIN:STANDARD")
-    newTimezoneList.append("      DTSTART:20071104T020000")
-    newTimezoneList.append("      RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU")
-    newTimezoneList.append("      TZNAME:%s"%(startName))
-    newTimezoneList.append("      TZOFFSETFROM:%s"%(endOffset))
-    newTimezoneList.append("      TZOFFSETTO:%s"%(startOffset))
-    newTimezoneList.append("    END:STANDARD")
-    newTimezoneList.append("    BEGIN:DAYLIGHT")
-    newTimezoneList.append("      DTSTART:20070311T020000")
-    newTimezoneList.append("      RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU")
-    newTimezoneList.append("      TZNAME:%s"%(endName))
-    newTimezoneList.append("      TZOFFSETFROM:%s"%(startOffset))
-    newTimezoneList.append("      TZOFFSETTO:%s"%(endOffset))
-    newTimezoneList.append("    END:DAYLIGHT")
-    newTimezoneList.append("  END:VTIMEZONE")
+    newTimezoneList.append("BEGIN:VTIMEZONE")
+    newTimezoneList.append("TZID:%s"%(myLocationString))
+    newTimezoneList.append("BEGIN:STANDARD")
+    newTimezoneList.append("DTSTART:20071104T020000")
+    newTimezoneList.append("RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU")
+    newTimezoneList.append("TZNAME:%s"%(startName))
+    newTimezoneList.append("TZOFFSETFROM:%s"%(endOffset))
+    newTimezoneList.append("TZOFFSETTO:%s"%(startOffset))
+    newTimezoneList.append("END:STANDARD")
+    newTimezoneList.append("BEGIN:DAYLIGHT")
+    newTimezoneList.append("DTSTART:20070311T020000")
+    newTimezoneList.append("RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU")
+    newTimezoneList.append("TZNAME:%s"%(endName))
+    newTimezoneList.append("TZOFFSETFROM:%s"%(startOffset))
+    newTimezoneList.append("TZOFFSETTO:%s"%(endOffset))
+    newTimezoneList.append("END:DAYLIGHT")
+    newTimezoneList.append("END:VTIMEZONE")
 
     # Return the new list
     return newTimezoneList
@@ -209,9 +209,9 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
     newCalendarEntryList = list()
 
     newCalendarEntryList.append("BEGIN:VCALENDAR")
-    newCalendarEntryList.append("  VERSION:2.0")
-    newCalendarEntryList.append("  CALSCALE:GREGORIAN")
-    newCalendarEntryList.append("  PRODID:-//Apple Inc.//macOS 13.7.1//EN")
+    newCalendarEntryList.append("VERSION:2.0")
+    newCalendarEntryList.append("CALSCALE:GREGORIAN")
+    newCalendarEntryList.append("PRODID:-//Apple Inc.//macOS 13.7.1//EN")
 
     # Generate the timezone fields
     timezoneList = generateVTIMEZONE(myLocationString=myLocationString)
@@ -240,48 +240,3 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
 
     # Return the full event
     return newCalendarEntryList
-
-# Example string setup and call based on an N2YO JSON file:
-#
-# import eventFormatter
-# from support import utils
-#
-# # Test Data
-# satname = "NOAA 15"
-# startAz = 177.84
-# startAzCompass = "S"
-# startUTC = 1734660280
-# maxAz = 258.19
-# maxAzCompass = "W"
-# maxEl = 53.45
-# maxUTC = 1734660725
-# endAz = 341.99
-# endAzCompass = "NNW"
-# endUTC = 1734661175
-#
-# # Generate a random UID for this event:
-# thisEvenUid = utils.genRandomId()
-#
-# # Setup the Summary and Description strings:
-# eventSummary = "%s, Elevation: %.2f"%(satname, maxEl)
-# eventDescription = "Start: %s, Peak: %s, End: %s"%(startAzCompass, maxAzCompass, endAzCompass)
-#
-# # Setup the URL, just point to the N2YO page for now...
-# thisUrl = "www.n2yo.com"
-#
-# newEvent = eventFormatter.generateCalDavEvent(
-#   eventSummary=eventSummary,
-#   startTime=startUTC,
-#   endTime=endUTC,
-#   myLocationString='America/Denver',
-#   eventLocation='Outer Space',
-#   eventDescription=eventDescription,
-#   eventUrl=thisUrl,
-#   eventUid=thisEvenUid,
-#   alarmMinutesBefore=15
-# )
-#
-# for thisLine in newEvent:
-#   print(thisLine)
-#
-# print("Event filename: %s.ics"%(thisEvenUid))
