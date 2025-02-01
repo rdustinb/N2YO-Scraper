@@ -60,17 +60,20 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
         thisUrl = "www.n2yo.com"
         # Generate the Calendar Event
         newEvent = eventFormatter.generateCalDavEvent(
-          eventSummary=eventSummary,
-          startTime=thisEvent['startUTC'],
-          endTime=thisEvent['endUTC'],
-          myLocationString=myLocation,
-          eventLocation='Outer Space',
-          eventDescription=eventDescription,
-          eventUrl=thisUrl,
-          eventUid=thisEventUid,
-          alarmMinutesBefore=myAlertTime
+            eventSummary=eventSummary,
+            startTime=thisEvent['startUTC'],
+            endTime=thisEvent['endUTC'],
+            myLocationString=myLocation,
+            eventLocation='Outer Space',
+            eventDescription=eventDescription,
+            eventUrl=thisUrl,
+            eventUid=thisEventUid,
+            alarmMinutesBefore=myAlertTime
         )
+
         # Write the Calendar Event to a file
-        with open("%s/%s.ics"%(outFolder,thisEventUid), "w+") as fh_write:
-            for thisLine in newEvent:
-                fh_write.write("%s\n"%(thisLine))
+        dataHandling.storeRawData(
+            localDataFolder=outFolder,
+            localDataFilename="%s.ics"%(thisEventUid),
+            fileData=newEvent
+        )

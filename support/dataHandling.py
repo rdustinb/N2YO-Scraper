@@ -49,3 +49,18 @@ def checkStoredLocalData(localDataFolder: str, localDataFilename: str, jsonData)
         print("Data was stored correctly!")
     else:
         print("Data was NOT stored correctly!")
+
+################################
+# Store raw data
+def storeRawData(localDataFolder: str, localDataFilename: str, fileData):
+    localDataFilePath = Path(localDataFolder+"/"+localDataFilename)
+
+    print("Writing data to %s"%(localDataFilePath))
+
+    # Create the folder if it doesn't exist
+    Path(localDataFolder).mkdir(parents=True, exist_ok=True)
+
+    # Store the data local
+    with open(localDataFilePath, "w") as fh:
+        for thisLine in fileData:
+            fh.write("%s\n"%(thisLine))
