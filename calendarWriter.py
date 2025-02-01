@@ -67,7 +67,7 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
           eventLocation='Outer Space',
           eventDescription=eventDescription,
           eventUrl=thisUrl,
-          eventUid=utils.genRandomId(), #thisEventUid,
+          eventUid=thisEventUid,
           alarmMinutesBefore=myAlertTime
         )
         # Write the Calendar Event to a file

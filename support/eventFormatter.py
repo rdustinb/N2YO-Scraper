@@ -91,13 +91,14 @@ import datetime, dateutil
 
 def utcEpochToLocalTime(thisEpoch: int, myLocationString: str):
     # Convert the Epoch Time to a Timestamp object of the UTC timezone
-    thisUtcTime = datetime.datetime.fromtimestamp(thisEpoch).replace(tzinfo=dateutil.tz.gettz('UTC'))
+    thisUtcTime = datetime.datetime.fromtimestamp(thisEpoch).replace(tzinfo=dateutil.tz.gettz(myLocationString))
+    #thisUtcTime = datetime.datetime.fromtimestamp(thisEpoch).replace(tzinfo=dateutil.tz.gettz('UTC'))
     # Convert the UTC Timestamp object to a Local Timestamp object
     thisLocalTime = thisUtcTime.astimezone(dateutil.tz.gettz(myLocationString))
     # Format the timestamp to YYYYMMDDTHHMMSS
     thisLocalTimeFormatted = thisLocalTime.strftime("%Y%m%dT%H%M%S")
     # Return the local time
-    return thisLocalTime
+    return thisLocalTimeFormatted
 
 def getCurrentLocalTime():
     return datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
@@ -151,7 +152,7 @@ def generateVEVENT(eventSummary: str, startTime: str, endTime: str, myLocationSt
     newEventList.append("SUMMARY:%s"%(eventSummary))
     newEventList.append("DTSTART;TZID=%s:%s"%(myLocationString,localStartTime))
     newEventList.append("DTEND;TZID=%s:%s"%(myLocationString,localEndTime))
-    newEventList.append("LOCATION:Location: %s"%(eventLocation))
+    newEventList.append("LOCATION:%s"%(eventLocation))
     newEventList.append("DESCRIPTION:%s"%(eventDescription))
     newEventList.append("URL;VALUE=URI:%s"%(eventUrl))
     newEventList.append("UID:%s"%(eventUid))
@@ -206,12 +207,15 @@ def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocat
                   eventLocation: str, eventDescription: str, eventUrl: str, eventUid: str,
                    alarmMinutesBefore: int):
 
+    # Due to the Time Location String needing quotes in some places but not others, clean the value to be sure
+    myLocationString = myLocationString.strip("'").strip("\"")
+
     newCalendarEntryList = list()
 
     newCalendarEntryList.append("BEGIN:VCALENDAR")
     newCalendarEntryList.append("VERSION:2.0")
     newCalendarEntryList.append("CALSCALE:GREGORIAN")
-    newCalendarEntryList.append("PRODID:-//Apple Inc.//macOS 13.7.1//EN")
+    newCalendarEntryList.append("PRODID:-//N2YO Scraper//Version 1.0//EN")
 
     # Generate the timezone fields
     timezoneList = generateVTIMEZONE(myLocationString=myLocationString)
