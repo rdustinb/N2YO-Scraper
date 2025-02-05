@@ -1,0 +1,20 @@
+---
+myLocation: "America/Pasadena"
+myAlertTime: 15
+# This folder is relative to /home/{{ ansible_ssh_user }}/
+outFolder: somefolder/someotherfolder/thisfolder
+myKey: AAAAAA-BBBBBB-CCCCCC-DDDD 
+myLatitude: 34.145
+myLongitude: -118.141
+myAltitudeMeters: 10
+myThresholdAngle: 45
+myPredictionDays: 10
+mySatelliteNoradIds: 25338 28654 33591 43013
+mySatelliteNames: NOAA15 NOAA18 NOAA19 NOAA20
+
+# Control when the cronjob for the data fetcher runs:
+dataUpdateHour: "*"
+dataUpdateMinute: "14,29,44,59"
+# Control when the cronjob for the calendar writer runs:
+calUpdateHour: "*"
+calUpdateMinute: "*/15"

@@ -1,0 +1,114 @@
+# Author: Dustin Brothers
+# Description:
+#   yaml playbook to setup a node to process N2YO satellite flyover events
+---
+- name: N2YO Script Deployment
+  hosts: all
+
+  vars_files:
+    - myconfigini.yml
+
+  vars:
+    home_folder: "/home/{{ ansible_ssh_user }}"
+    venv_folder: "{{ home_folder }}/.venv_n2yo_scraper"
+    n2yo_folder: "{{ home_folder }}/N2YO-Scraper"
+
+  pre_tasks:
+    # changed_when set to false will prevent Ansible from reporting these
+    # registers as a change in the final summary
+    - name: Register if N2YO repo is already present
+      ansible.builtin.shell: |
+        ls {{ n2yo_folder }}/
+      register: n2yo_exists
+      ignore_errors: true
+      changed_when: false
+      no_log: true
+
+    - name: Register if venv folder already exists
+      ansible.builtin.shell: |
+        ls {{ venv_folder }}/
+      register: venv_exists
+      ignore_errors: true
+      changed_when: false
+      no_log: true
+
+  tasks:
+    ############################################################################
+    - name: Install some necessary packages
+      become: true
+      ansible.builtin.package:
+        update_cache: true
+        cache_valid_time: 3600
+        pkg:
+          - python3-pip
+          - python3-venv
+
+    ############################################################################
+    - name: Clone the N2YO Repo locally
+      when: n2yo_exists is failed
+      ansible.builtin.git:
+        repo: "https://github.com/rdustinb/N2YO-Scraper.git"
+        dest: "{{ n2yo_folder }}"
+        update: false
+
+    ############################################################################
+    - name: Write the config.ini file onto the remote device given the myconfigini.yml values
+      ansible.builtin.lineinfile:
+        path: "{{ n2yo_folder }}/config.ini"
+        line: "{{ item }}"
+        create: true
+        mode: '0740'
+      loop:
+        - "[caldav]"
+        - "myLocation = {{ myLocation }}"
+        - "myAlertTime = {{ myAlertTime }}"
+        - "outFolder = {{ home_folder }}/{{ outFolder }}"
+        - "[restapi]"
+        - "myKey = {{ myKey }}"
+        - "myLatitude = {{ myLatitude }}"
+        - "myLongitude = {{ myLongitude }}"
+        - "myAltitudeMeters = {{ myAltitudeMeters }}"
+        - "myThresholdAngle = {{ myThresholdAngle }}"
+        - "myPredictionDays = {{ myPredictionDays }}"
+        - "[satellites]"
+        - "mySatelliteNoradIds = {{ mySatelliteNoradIds }}"
+        - "mySatelliteNames = {{ mySatelliteNames }}"
+
+    ############################################################################
+    - name: Create the virtual environment location
+      when: venv_exists is failed
+      ansible.builtin.command:
+        cmd: "python3 -m venv {{ venv_folder }}"
+
+    ############################################################################
+    - name: Install venv pip3 packages for N2YO Scraper
+      when: venv_exists is failed
+      ansible.builtin.command:
+        cmd: "{{ venv_folder }}/bin/pip3 install {{ item }}"
+      loop:
+        - requests
+        - python-dateutil
+
+    ############################################################################
+    - name: Add the Data Fetcher to the crontab entries
+      ansible.builtin.cron:
+        name: "N2YO Data Fetcher"
+        user: "{{ ansible_ssh_user }}"
+        hour: "{{ dataUpdateHour }}"
+        minute: "{{ dataUpdateMinute }}"
+        job: "source {{ venv_folder }}/bin/activate ; cd {{ n2yo_folder }}/ ; python3 {{ n2yo_folder }}/dataFetcher.py ; deactivate"
+
+    - name: Add the Calendar Event Writer to the crontab entries
+      ansible.builtin.cron:
+        name: "N2YO Calendar Writer"
+        user: "{{ ansible_ssh_user }}"
+        hour: "{{ calUpdateHour }}"
+        minute: "{{ calUpdateMinute }}"
+        job: "source {{ venv_folder }}/bin/activate ; cd {{ n2yo_folder }}/ ; python3 {{ n2yo_folder }}/calendarWriter.py ; deactivate"
+
+    ############################################################################
+    - name: Start the cron service
+      become: true
+      ansible.builtin.systemd_service:
+        name: cron
+        state: started
