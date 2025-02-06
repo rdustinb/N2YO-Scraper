@@ -57,7 +57,7 @@
         path: "{{ n2yo_folder }}/config.ini"
         line: "{{ item }}"
         create: true
-        mode: '0740'
+        mode: '0640'
       loop:
         - "[caldav]"
         - "myLocation = {{ myLocation }}"
@@ -89,22 +89,28 @@
         - requests
         - python-dateutil
 
-    ############################################################################
-    - name: Add the Data Fetcher to the crontab entries
+    ###############################################################################
+    - name: Generate a script to call both the data fetcher and calendar writer
+      ansible.builtin.lineinfile:
+        path: "{{ home_folder }}/n2yo.sh"
+        line: "{{ item }}"
+        create: true
+        mode: '0770'
+      loop:
+        - "#!/bin/bash"
+        - ""
+        - "cd {{ n2yo_folder }}/"
+        - "{{ venv_folder }}/bin/python3 {{ n2yo_folder }}/dataFetcher.py"
+        - "{{ venv_folder }}/bin/python3 {{ n2yo_folder }}/calendarWriter.py"
+
+    ###############################################################################
+    - name: Add the Calendar Event Writer to the crontab entries
       ansible.builtin.cron:
-        name: "N2YO Data Fetcher"
+        name: "N2YO Shell Script"
         user: "{{ ansible_ssh_user }}"
         hour: "{{ dataUpdateHour }}"
         minute: "{{ dataUpdateMinute }}"
-        job: "source {{ venv_folder }}/bin/activate ; cd {{ n2yo_folder }}/ ; python3 {{ n2yo_folder }}/dataFetcher.py ; deactivate"
-
-    - name: Add the Calendar Event Writer to the crontab entries
-      ansible.builtin.cron:
-        name: "N2YO Calendar Writer"
-        user: "{{ ansible_ssh_user }}"
-        hour: "{{ calUpdateHour }}"
-        minute: "{{ calUpdateMinute }}"
-        job: "source {{ venv_folder }}/bin/activate ; cd {{ n2yo_folder }}/ ; python3 {{ n2yo_folder }}/calendarWriter.py ; deactivate"
+        job: "{{ home_folder }}/n2yo.sh"
 
     ############################################################################
     - name: Start the cron service

@@ -15,6 +15,3 @@ mySatelliteNames: NOAA15 NOAA18 NOAA19 NOAA20
 # Control when the cronjob for the data fetcher runs:
 dataUpdateHour: "*"
 dataUpdateMinute: "14,29,44,59"
-# Control when the cronjob for the calendar writer runs:
-calUpdateHour: "*"
-calUpdateMinute: "*/15"
