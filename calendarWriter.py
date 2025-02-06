@@ -48,11 +48,11 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
         )
 
         # Setup the Summary and Description strings:
-        eventSummary = "%s, Elevation: %.2f"%(
+        eventSummary = "%s ::: Elev %.2f"%(
             thisSatelliteJson['info']['satname'],
             thisEvent['maxEl']
         )
-        eventDescription = "Start: %s, Peak: %s, End: %s"%(
+        eventDescription = "Start: %s; Peak: %s; End: %s"%(
             thisEvent['startAzCompass'],
             thisEvent['maxAzCompass'],
             thisEvent['endAzCompass']
