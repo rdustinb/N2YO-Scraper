@@ -11,6 +11,8 @@ myLocation = 'America/Denver'
 myAlertTime = 15
 # Where to output the .ics files for each of the satellite events
 outFolder = some_folder
+# Print the metrics to a file
+printMetrics = True
 
 [restapi]
 # Add your specific N2YO API Key here by visiting this page:
@@ -26,6 +28,8 @@ myAltitudeMeters = 0
 myThresholdAngle = 45
 # Desired Prediction Days out to fetch (max of 10)
 myPredictionDays = 10
+# Print the metrics to a file
+printMetrics = True
 
 [satellites]
 # List all satellites desired to be tracked

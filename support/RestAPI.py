@@ -26,6 +26,7 @@ class RestApiClass:
         self.__myAltitudeMeters     = config.get('restapi', 'myAltitudeMeters')
         self.__myThresholdAngle     = config.get('restapi', 'myThresholdAngle')
         self.__myPredictionDays     = config.get('restapi', 'myPredictionDays')
+        self.__printMetrics         = config.getboolean('restapi', 'printMetrics')
         # NORAD IDs can be looked up here:
         #       https://www.n2yo.com/database/
         self.__mySatelliteNoradIds  = config.get('satellites', 'mySatelliteNoradIds').split()
@@ -69,6 +70,8 @@ class RestApiClass:
     def fetchAllJson(self):
         self.__myDebug.debugPrint("fetchAllJson()", 1)
 
+        theseMetrics = list()
+
         # Lookup by NORAD ID
         for thisNoradId in self.__mySatelliteData:
             thisUrl = self.__mySatelliteData[thisNoradId][1]
@@ -79,8 +82,14 @@ class RestApiClass:
                 response = requests.get(thisUrl)
                 self.__mySatelliteData[thisNoradId].append(response.json())
                 dataHandling.setLocalData("./localData", thisFilename, self.__mySatelliteData[thisNoradId][2])
+                theseMetrics.append("%s had %i events stored."%(thisName, len(self.__mySatelliteData[thisNoradId][2]['passes'])))
             else:
                 self.__myDebug.debugPrint("Fetching from URL: %s"%(thisUrl), 1)
                 self.__myDebug.debugPrint("Storing JSON in: self.__mySatelliteData[%s][3]"%(thisNoradId), 1)
                 self.__myDebug.debugPrint("Writing JSON to: %s"%(thisFilename), 1)
 
+        # Print the metrics to a file
+        if self.__printMetrics:
+            with open("metrics.log", "w") as fh_metrics:
+                for thisMetric in theseMetrics:
+                    fh_metrics.write("%s\n"%(thisMetric))
