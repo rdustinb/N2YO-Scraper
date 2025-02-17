@@ -1,5 +1,6 @@
 from support import dataHandling, utils, eventFormatter
 import configparser, requests, json
+import os
 
 ################################
 # Get the configuration
@@ -46,6 +47,33 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
             thisEvent['maxUTC'],
             thisEvent['endUTC']
         )
+
+        # Look for similarly-named events, pruning them if needed...
+        searchDir = os.fsencode(outFolder)
+        newStartUTC = int(thisEvent['startUTC'])
+        newMaxUTC = int(thisEvent['maxUTC'])
+        newEndUTC = int(thisEvent['endUTC'])
+        # Loop through all files in the folder...
+        for file in os.listdir(searchDir):
+            filename = os.fsdecode(file)
+            # Only look at the ics files...
+            if filename.endswith(".ics"):
+                # For this event, the satellite ID must match
+                if filename.find("%s"%(thisSatelliteJson['info']['satid'])) != -1:
+                    # Remove any files whose maxUTC is within 60 minutes of the new event...
+                    currentStartUTC = int(filename.split("-")[1])
+                    currentMaxUTC = int(filename.split("-")[2])
+                    currentEndUTC = int(filename.split("-")[3].split(".")[0])
+                    # If the analyzed event is within +/- 30 minutes of the new event, it is a duplicate and should be
+                    # removed...This is probably a worst-case scenario as 10day predictive windows shouldn't drift more
+                    # than a few minutes either direction...
+                    if ((currentStartUTC > (newStartUTC - 1800)) and (currentStartUTC < (newStartUTC + 1800))) or \
+                    ((currentMaxUTC > (newMaxUTC - 1800)) and (currentMaxUTC < (newMaxUTC + 1800))) or \
+                    ((currentEndUTC > (newEndUTC - 1800)) and (currentEndUTC < (newEndUTC + 1800))):
+                        # Also, only remove the file if the filename isn't EXACTLY like the new one
+                        if filename != "%s.ics"%(thisEventUid):
+                            print("Pruning the file %s/%s..."%(outFolder,filename))
+                            os.remove("%s/%s"%(outFolder,filename))
 
         # Setup the Summary and Description strings:
         eventSummary = "%s ::: Elev %.2f"%(
