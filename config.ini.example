@@ -6,7 +6,7 @@
 
 [caldav]
 # Your timezone location. Ex: America/NewYork
-myLocation = 'America/Denver'
+myLocation = 'America/Pasadena'
 # Minutes before the event to set the alerts to
 myAlertTime = 15
 # Where to output the .ics files for each of the satellite events
