@@ -15,3 +15,6 @@ mySatelliteNames: NOAA15 NOAA18 NOAA19 NOAA20
 # Control when the cronjob for the data fetcher runs:
 dataUpdateHour: "*"
 dataUpdateMinute: "14,29,44,59"
+
+# Control whether metrics of the API access and calendar event writing is stored in a local file
+printMetrics = True

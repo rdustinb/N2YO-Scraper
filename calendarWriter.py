@@ -14,13 +14,19 @@ config.read('config.ini')
 myLocation              = config.get('caldav', 'myLocation')
 myAlertTime             = config.getint('caldav', 'myAlertTime')
 outFolder               = config.get('caldav', 'outFolder')
+printMetrics            = config.getboolean('caldav', 'printMetrics')
+
 theseNoradIds           = config.get('satellites', 'mySatelliteNoradIds').split()
 theseNames              = config.get('satellites', 'mySatelliteNames').split()
 
 ################################
 # Loop through all configured satellites
+theseMetrics = list()
+
 for thisNoradId, thisName in zip(theseNoradIds, theseNames):
     thisFilename = "%s_%s.json"%(thisNoradId, thisName)
+
+    prunedEvents = 0
 
     # Read the Satellite JSON data
     thisSatelliteJson = dataHandling.getLocalData("./localData", thisFilename)
@@ -74,6 +80,7 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
                         if filename != "%s.ics"%(thisEventUid):
                             print("Pruning the file %s/%s..."%(outFolder,filename))
                             os.remove("%s/%s"%(outFolder,filename))
+                            prunedEvents += 1
 
         # Setup the Summary and Description strings:
         eventSummary = "%s ::: Elev %.2f"%(
@@ -105,3 +112,11 @@ for thisNoradId, thisName in zip(theseNoradIds, theseNames):
             localDataFilename="%s.ics"%(thisEventUid),
             fileData=newEvent
         )
+
+    theseMetrics.append("%s had %d events pruned."%(thisSatelliteJson['info']['satname'], prunedEvents))
+
+# Print the metrics to a file
+if printMetrics:
+    with open("metrics.log", "a") as fh_metrics:
+        for thisMetric in theseMetrics:
+            fh_metrics.write("%s\n"%(thisMetric))
