@@ -90,6 +90,6 @@ class RestApiClass:
 
         # Print the metrics to a file
         if self.__printMetrics:
-            with open("metrics.log", "w") as fh_metrics:
+            with open("metrics.log", "w+") as fh_metrics:
                 for thisMetric in theseMetrics:
                     fh_metrics.write("%s\n"%(thisMetric))
