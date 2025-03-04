@@ -104,12 +104,14 @@
         - "cd {{ n2yo_folder }}/"
         - "{{ venv_folder }}/bin/python3 {{ n2yo_folder }}/dataFetcher.py"
         - "{{ venv_folder }}/bin/python3 {{ n2yo_folder }}/calendarWriter.py"
+        - "{{ venv_folder }}/bin/python3 {{ n2yo_folder }}/sendNotification.py"
 
     ###############################################################################
     - name: Add the Calendar Event Writer to the crontab entries
       ansible.builtin.cron:
         name: "N2YO Shell Script"
         user: "{{ ansible_ssh_user }}"
+        weekday: "{{ dataUpdateHour }}"
         hour: "{{ dataUpdateHour }}"
         minute: "{{ dataUpdateMinute }}"
         job: "{{ home_folder }}/n2yo.sh"
