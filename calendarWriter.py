@@ -1,6 +1,7 @@
 from support import dataHandling, utils, eventFormatter
+from time import strftime, localtime
 import configparser, requests, json
-import os
+import os,sys
 
 ################################
 # Get the configuration
@@ -14,12 +15,19 @@ config.read('config.ini')
 myLocation              = config.get('caldav', 'myLocation')
 myAlertTime             = config.getint('caldav', 'myAlertTime')
 outFolder               = config.get('caldav', 'outFolder')
+filterAllowStart        = config.get('caldav', 'filterAllowStart')
+filterAllowEnd          = config.get('caldav', 'filterAllowEnd')
 printMetrics            = config.getboolean('caldav', 'printMetrics')
 
 theseNoradIds           = config.get('satellites', 'mySatelliteNoradIds').split()
 theseNames              = config.get('satellites', 'mySatelliteNames').split()
 
 theseMetrics = list()
+
+if filterAllowStart == "None" or filterAllowEnd == "None":
+    theseMetrics.append("Filtering window is disabled...")
+else:
+    theseMetrics.append("Filtering window is enabled...")
 
 ################################
 # Loop through all configured satellites
@@ -47,6 +55,19 @@ if os.path.isdir(outFolder):
         
         # Loop through all Events for this satellite
         for thisEvent in thisSatelliteJson['passes']:
+            filteredEvents = 0
+            # Compare filter window start/end times with this event's start/end times
+            # Event times are UTC
+            # Filter Window times are local
+            if filterAllowStart != "None" and filterAllowEnd != "None":
+                localStartTime = strftime('%H%M', localtime(thisEvent['startUTC']))
+                localFilterStartTime = filterAllowStart
+                localEndTime = strftime('%H%M', localtime(thisEvent['endUTC']))
+                localFilterEndTime = filterAllowEnd
+                if int(localStartTime) < int(localFilterStartTime) or int(localEndTime) > int(localFilterEndTime):
+                    filteredEvents += 1
+                    continue
+
             # Generate this event's UID
             thisEventUid = "%s-%s-%s-%s"%(
                 thisSatelliteJson['info']['satid'],
@@ -114,7 +135,9 @@ if os.path.isdir(outFolder):
                 fileData=newEvent
             )
     
-        theseMetrics.append("%s had %d events pruned."%(thisSatelliteJson['info']['satname'], prunedEvents))
+        theseMetrics.append("%s had %d events pruned due to duplication."%(thisSatelliteJson['info']['satname'], prunedEvents))
+        if filterAllowStart != "None" and filterAllowEnd != "None":
+            theseMetrics.append("%s had %d events filtered based on time."%(thisSatelliteJson['info']['satname'], filteredEvents))
 else:
     theseMetrics.append("The out folder %s doesn't exist!"%(outFolder))
 
