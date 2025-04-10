@@ -13,7 +13,7 @@ config.read('config.ini')
 
 # Access values from the configuration file
 myLocation              = config.get('caldav', 'myLocation')
-myAlertTime             = config.getint('caldav', 'myAlertTime')
+myAlertTime             = config.get('caldav', 'myAlertTime')
 outFolder               = config.get('caldav', 'outFolder')
 filterAllowStart        = config.get('caldav', 'filterAllowStart')
 filterAllowEnd          = config.get('caldav', 'filterAllowEnd')
