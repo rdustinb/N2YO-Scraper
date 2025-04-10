@@ -117,27 +117,32 @@ def getTimezoneInfo(thisTime: str, myLocationString: str):
 ################################################################################
 #                             Calendar Event Building
 ################################################################################
-def generateVALARM(minutesBefore: int):
-    newAlarmList = list()
+def generateVALARM(minutesBefore):
+    try:
+      newAlarmList = list()
+      # Of the form xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      thisAlarmUID = utils.genRandomId()
 
-    # Of the form xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    thisAlarmUID = utils.genRandomId()
-
-    # Append the alarm information
-    newAlarmList.append("BEGIN:VALARM")
-    newAlarmList.append("ACTION:DISPLAY")
-    newAlarmList.append("DESCRIPTION:Reminder")
-    newAlarmList.append("TRIGGER:-PT%iM"%(minutesBefore))
-    newAlarmList.append("UID:%s"%(thisAlarmUID))
-    newAlarmList.append("X-WR-ALARMUID:%s"%(thisAlarmUID))
-    newAlarmList.append("END:VALARM")
+      # Append the alarm information
+      newAlarmList.append("BEGIN:VALARM")
+      newAlarmList.append("ACTION:DISPLAY")
+      newAlarmList.append("DESCRIPTION:Reminder")
+      newAlarmList.append("TRIGGER:-PT%iM"%(int(minutesBefore)))
+      newAlarmList.append("UID:%s"%(thisAlarmUID))
+      newAlarmList.append("X-WR-ALARMUID:%s"%(thisAlarmUID))
+      newAlarmList.append("END:VALARM")
+    except:
+      newAlarmList = list()
+      # Make the alarm entry empty, allows for the config to be set to 
+      # a non-numeric and have the alarm disabled...
+      newAlarmList.append(" ")
 
     # Return the new list
     return newAlarmList
 
 def generateVEVENT(eventSummary: str, startTime: str, endTime: str, myLocationString: str, 
                   eventLocation: str, eventDescription: str, eventUrl: str, eventUid: str,
-                   alarmMinutesBefore: int):
+                   alarmMinutesBefore):
     newEventList = list()
 
     # Convert the Start time to local in the correct format
@@ -205,7 +210,7 @@ def generateVTIMEZONE(myLocationString: str):
 
 def generateCalDavEvent(eventSummary: str, startTime: str, endTime: str, myLocationString: str, 
                   eventLocation: str, eventDescription: str, eventUrl: str, eventUid: str,
-                   alarmMinutesBefore: int):
+                   alarmMinutesBefore):
 
     # Due to the Time Location String needing quotes in some places but not others, clean the value to be sure
     myLocationString = myLocationString.strip("'").strip("\"")

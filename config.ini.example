@@ -8,7 +8,8 @@
 # Your timezone location. Ex: America/NewYork
 myLocation = 'America/Pasadena'
 # Minutes before the event to set the alerts to
-# Setting to 0 disables any alerts
+# Setting to a non-numeric value will disable the alarm
+#myAlertTime = Off
 myAlertTime = 15
 # Where to output the .ics files for each of the satellite events
 outFolder = some_folder
